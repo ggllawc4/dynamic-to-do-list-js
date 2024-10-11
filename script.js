@@ -39,13 +39,34 @@ document.addEventListener("DOMContentLoaded", function() {
         taskInput.value = "";
     }
 
+    // Function to save a task to Local Storage
+    function saveTaskToLocalStorage(taskText) {
+        const storedTasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+        storedTasks.push(taskText);
+        localStorage.setItem('tasks', JSON.stringify(storedTasks));
+    }
+
+    // Function to remove a task from Local Storage
+    function removeTaskFromLocalStorage(taskText) {
+        let storedTasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+        storedTasks = storedTasks.filter(task => task !== taskText); // Remove the task from the array
+        localStorage.setItem('tasks', JSON.stringify(storedTasks));  // Save the updated array to Local Storage
+    }
+
     // Event listener for the "Add Task" button
-    addButton.addEventListener('click', addTask);
+    addButton.addEventListener('click', function() {
+        const taskText = taskInput.value;
+        addTask(taskText);
+    });
 
     // Event listener to add task when pressing "Enter"
     taskInput.addEventListener('keypress', function(event) {
         if (event.key === 'Enter') {
-            addTask();
+            const taskText = taskInput.value;
+            addTask(taskText);
         }
     });
+
+    // Load existing tasks from Local Storage when the page loads
+    loadTasks();
 });
